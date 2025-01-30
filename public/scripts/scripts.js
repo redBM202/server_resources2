@@ -16,13 +16,6 @@ async function fetchSystemInfo() {
         updateCharts(data.cpu, data.memory);
     } catch (error) {
         console.error('Error fetching system info:', error);
-        document.getElementById('hostname').textContent = 'Error fetching system info';
-        document.getElementById('osinfo').textContent = error.message;
-        document.getElementById('kernel').textContent = 'N/A';
-        document.getElementById('cpu').textContent = 'N/A';
-        document.getElementById('memory').textContent = 'N/A';
-        document.getElementById('uptime').textContent = 'N/A';
-        document.getElementById('error-message').textContent = `Error: ${error.message}`;
     }
 }
 
