@@ -1,9 +1,15 @@
 const express = require('express');
 const os = require('os');
 const si = require('systeminformation');
+const path = require('path');
 
 const app = express();
 const port = 3000;
+
+// Serve the HTML file
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'taskManager.html'));
+});
 
 app.get('/api/system-info', async (req, res) => {
     try {
