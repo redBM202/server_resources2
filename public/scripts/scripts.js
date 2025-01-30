@@ -1,10 +1,9 @@
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-}
-
 async function fetchSystemInfo() {
     try {
         const response = await fetch('/api/system-info');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
 
         document.getElementById('hostname').textContent = data.hostname;
@@ -17,6 +16,13 @@ async function fetchSystemInfo() {
         updateCharts(data.cpu, data.memory);
     } catch (error) {
         console.error('Error fetching system info:', error);
+        document.getElementById('hostname').textContent = 'Error fetching system info';
+        document.getElementById('osinfo').textContent = error.message;
+        document.getElementById('kernel').textContent = 'N/A';
+        document.getElementById('cpu').textContent = 'N/A';
+        document.getElementById('memory').textContent = 'N/A';
+        document.getElementById('uptime').textContent = 'N/A';
+        document.getElementById('error-message').textContent = `Error: ${error.message}`;
     }
 }
 
