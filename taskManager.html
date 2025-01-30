@@ -111,9 +111,29 @@
                 document.getElementById('cpu').textContent = data.cpu + '%';
                 document.getElementById('memory').textContent = data.memory + '%';
                 document.getElementById('uptime').textContent = data.uptime;
+
+                updateCharts(data.cpu, data.memory);
             } catch (error) {
                 console.error('Error fetching system info:', error);
             }
+        }
+
+        function updateCharts(cpuUsage, memoryUsage) {
+            const now = new Date();
+            if (cpuChart.data.labels.length > 20) {
+                cpuChart.data.labels.shift();
+                cpuChart.data.datasets[0].data.shift();
+            }
+            if (memoryChart.data.labels.length > 20) {
+                memoryChart.data.labels.shift();
+                memoryChart.data.datasets[0].data.shift();
+            }
+            cpuChart.data.labels.push(now);
+            cpuChart.data.datasets[0].data.push(cpuUsage);
+            memoryChart.data.labels.push(now);
+            memoryChart.data.datasets[0].data.push(memoryUsage);
+            cpuChart.update();
+            memoryChart.update();
         }
 
         // Initialize charts
