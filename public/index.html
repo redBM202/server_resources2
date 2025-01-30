@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Task Manager</title>
+    <link rel="stylesheet" href="public/styles/styles.css">
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <h1>Linux System Monitor</h1>
+    
+    <div class="info-container">
+        <!-- ...existing code... -->
+    </div>
+
+    <div class="chart-container">
+        <canvas id="cpuChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="memoryChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="public/scripts/scripts.js"></script>
+</body>
+</html>
