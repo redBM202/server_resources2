@@ -1,0 +1,13 @@
+{
+  "name": "server_resources2",
+  "version": "1.0.0",
+  "description": "Linux Task Manager",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "systeminformation": "^5.9.9"
+  }
+}
