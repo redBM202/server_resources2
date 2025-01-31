@@ -2,18 +2,23 @@ const express = require('express');
 const os = require('os');
 const si = require('systeminformation');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const port = 3000;
 
+// Copy Chart.js to public directory on server start
+const chartJsSource = path.join(__dirname, 'node_modules/chart.js/dist/chart.min.js');
+const chartJsDestDir = path.join(__dirname, 'public/scripts/lib');
+const chartJsDest = path.join(chartJsDestDir, 'chart.min.js');
+
+if (!fs.existsSync(chartJsDestDir)) {
+    fs.mkdirSync(chartJsDestDir, { recursive: true });
+}
+fs.copyFileSync(chartJsSource, chartJsDest);
+
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Serve Chart.js from node_modules with correct MIME type
-app.get('/chartjs/chart.min.js', (req, res) => {
-    res.set('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, 'node_modules/chart.js/dist/chart.min.js'));
-});
 
 // Serve the HTML file
 app.get('/', (req, res) => {
