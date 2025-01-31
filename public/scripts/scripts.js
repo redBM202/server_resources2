@@ -1,3 +1,8 @@
+// Ensure Chart.js is loaded
+if (typeof Chart === 'undefined') {
+    throw new Error('Chart.js is not loaded');
+}
+
 async function fetchSystemInfo() {
     try {
         const response = await fetch('/api/system-info');
@@ -42,11 +47,6 @@ function updateCharts(cpuUsage, memoryUsage) {
     memoryChart.data.datasets[0].data.push(memoryUsage);
     cpuChart.update();
     memoryChart.update();
-}
-
-// Ensure Chart.js is loaded
-if (typeof Chart === 'undefined') {
-    throw new Error('Chart.js is not loaded');
 }
 
 // Initialize charts
