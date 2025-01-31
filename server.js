@@ -9,8 +9,11 @@ const port = 3000;
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve Chart.js from node_modules
-app.use('/chartjs', express.static(path.join(__dirname, 'node_modules/chart.js/dist')));
+// Serve Chart.js from node_modules with correct MIME type
+app.get('/chartjs/chart.min.js', (req, res) => {
+    res.set('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'node_modules/chart.js/dist/chart.min.js'));
+});
 
 // Serve the HTML file
 app.get('/', (req, res) => {
