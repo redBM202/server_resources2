@@ -10,18 +10,26 @@
     <button class="toggle-btn" onclick="toggleDarkMode()">Toggle Dark Mode</button>
     <h1>Task Manager</h1>
     
-    <div class="info-container">
-        <div class="info-box">
-            <div class="info-label">Hostname</div>
-            <div id="hostname">Loading...</div>
-        </div>
-        <div class="info-box">
-            <div class="info-label">OS Info</div>
-            <div id="osinfo">Loading...</div>
-        </div>
-        <div class="info-box">
-            <div class="info-label">Uptime</div>
-            <div id="uptime">Loading...</div>
+    <div class="monitor-section">
+        <div class="info-container-wrapper">
+            <div class="section-header" onclick="toggleSystemInfo()">
+                <h2>System Information</h2>
+                <span class="collapse-icon">▶</span>
+            </div>
+            <div class="info-container">
+                <div class="info-box">
+                    <div class="info-label">Hostname</div>
+                    <div id="hostname">Loading...</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">OS Info</div>
+                    <div id="osinfo">Loading...</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Uptime</div>
+                    <div id="uptime">Loading...</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -46,6 +54,18 @@
         </div>
     </div>
 
+    <div class="monitor-section">
+        <div class="storage-container">
+            <div class="storage-header" onclick="toggleStorage()">
+                <h2>Storage</h2>
+                <span class="collapse-icon">▶</span>
+            </div>
+            <div id="disk-info" class="disk-grid">
+                <!-- Disk information will be inserted here -->
+            </div>
+        </div>
+    </div>
+
     <script src="scripts/lib/chart.min.js"></script>
     <script src="scripts/lib/chartjs-adapter-date-fns.bundle.min.js"></script>
     <script>
@@ -58,6 +78,20 @@
         // Apply dark mode on load if needed
         if (localStorage.getItem('dark-mode') === 'true') {
             document.body.classList.add('dark-mode');
+        }
+
+        function toggleStorage() {
+            const diskInfo = document.getElementById('disk-info');
+            const collapseIcon = document.querySelector('.storage-header .collapse-icon');
+            diskInfo.classList.toggle('expanded');
+            collapseIcon.textContent = diskInfo.classList.contains('expanded') ? '▼' : '▶';
+        }
+
+        function toggleSystemInfo() {
+            const sysInfo = document.querySelector('.info-container');
+            const collapseIcon = document.querySelector('.section-header .collapse-icon');
+            sysInfo.classList.toggle('expanded');
+            collapseIcon.textContent = sysInfo.classList.contains('expanded') ? '▼' : '▶';
         }
     </script>
     <script src="scripts/scripts.js"></script>

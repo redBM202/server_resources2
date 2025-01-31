@@ -59,6 +59,16 @@ app.get('/api/system-info', async (req, res) => {
         const activeMemory = formatMemory(memory.active);
         const totalMemory = formatMemory(memory.total);
 
+        // Add disk information
+        const fsSize = await si.fsSize();
+        const diskInfo = fsSize.map(disk => ({
+            fs: disk.fs,
+            size: formatBytes(disk.size),
+            used: formatBytes(disk.used),
+            available: formatBytes(disk.available),
+            usePercent: disk.use.toFixed(1)
+        }));
+
         res.json({
             hostname,
             osinfo: osinfo ? `${osinfo.distro} ${osinfo.release}` : 'OS Info not available',
@@ -67,7 +77,8 @@ app.get('/api/system-info', async (req, res) => {
             memoryDetails: `${totalMemory} / ${activeMemory}`,
             memoryInMB: memory.active / (1024 * 1024),
             totalMemoryMB: memory.total / (1024 * 1024),
-            uptime: formatUptime(Math.floor(uptime))
+            uptime: formatUptime(Math.floor(uptime)),
+            disks: diskInfo
         });
     } catch (error) {
         console.error('Error fetching system info:', error);
@@ -86,6 +97,23 @@ function formatUptime(seconds) {
     const minutes = Math.floor(seconds / 60);
     seconds %= 60;
     return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 GB';
+    const k = 1024;
+    const sizes = ['B', 'MB', 'GB', 'TB'];
+    
+    // Calculate the size in GB first
+    const sizeInGB = bytes / (Math.pow(k, 3));
+    
+    // If size is less than 1024 GB, show in GB
+    if (sizeInGB < 1024) {
+        return sizeInGB.toFixed(2) + ' GB';
+    }
+    
+    // If truly bigger than 1024 GB, show in TB
+    return (sizeInGB / 1024).toFixed(2) + ' TB';
 }
 
 app.listen(port, () => {

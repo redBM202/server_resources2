@@ -22,11 +22,22 @@ body.dark-mode {
 h1 {
     margin-bottom: 20px;
 }
+.info-container-wrapper {
+    margin: 20px auto;
+    width: 80vw;
+}
 .info-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     margin-top: 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+.info-container.expanded {
+    max-height: 500px;
+    transition: max-height 0.3s ease-in;
 }
 .info-box {
     background: #f5f5f5;
@@ -65,4 +76,98 @@ h1 {
 .chart-info {
     text-align: center;
     margin-top: 10px;
+}
+
+.storage-container {
+    margin: 20px auto;
+    width: 80vw;
+}
+
+.storage-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 10px;
+}
+
+.storage-header h2 {
+    margin: 0;
+    flex-grow: 1;
+}
+
+.collapse-icon {
+    font-size: 1.2em;
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.disk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 10px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.disk-grid.expanded {
+    max-height: 1000px; /* Adjust this value based on your needs */
+    transition: max-height 0.3s ease-in;
+}
+
+.disk-item {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.dark-mode .disk-item {
+    background: #2d2d2d;
+}
+
+.disk-progress {
+    width: 100%;
+    height: 10px;
+    background: #ddd;
+    border-radius: 5px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.dark-mode .disk-progress {
+    background: #444;
+}
+
+.disk-progress-bar {
+    height: 100%;
+    background: #4CAF50;
+    transition: width 0.3s ease;
+}
+
+.disk-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.dark-mode .disk-details {
+    color: #aaa;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 10px;
+}
+
+.section-header h2 {
+    margin: 0;
+    flex-grow: 1;
 }

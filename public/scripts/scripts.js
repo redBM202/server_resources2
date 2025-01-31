@@ -120,6 +120,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const now = new Date();
             updateChart(cpuChart, now, data.cpu);
             updateChart(memoryChart, now, data.memoryInMB);
+
+            // Update disk information
+            const diskInfoContainer = document.getElementById('disk-info');
+            diskInfoContainer.innerHTML = data.disks.map(disk => `
+                <div class="disk-item">
+                    <div class="info-label">${disk.fs}</div>
+                    <div class="disk-progress">
+                        <div class="disk-progress-bar" style="width: ${disk.usePercent}%"></div>
+                    </div>
+                    <div class="disk-details">
+                        <span>${disk.used} used</span>
+                        <span>${disk.available} free</span>
+                    </div>
+                    <div class="disk-details">
+                        <span>Total: ${disk.size}</span>
+                        <span>${disk.usePercent}%</span>
+                    </div>
+                </div>
+            `).join('');
+
         } catch (error) {
             console.error('Error fetching system info:', error);
         }
