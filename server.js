@@ -10,7 +10,13 @@ const port = 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve Chart.js from node_modules
-app.use('/chartjs', express.static(path.join(__dirname, 'node_modules/chart.js/dist')));
+app.use('/chartjs', express.static(path.join(__dirname, 'node_modules/chart.js/dist'), {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        }
+    }
+}));
 
 // Serve the HTML file
 app.get('/', (req, res) => {
