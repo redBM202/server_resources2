@@ -9,6 +9,9 @@ const port = 3000;
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Serve Chart.js from node_modules
+app.use('/chart.js', express.static(path.join(__dirname, 'node_modules/chart.js/dist')));
+
 // Serve the HTML file
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -37,6 +40,7 @@ app.get('/api/system-info', async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching system info:', error);
+        console.error('Error details:', error.message, error.stack);
         res.status(500).send('Internal Server Error');
     }
 });
