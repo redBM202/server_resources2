@@ -67,6 +67,7 @@ app.get('/api/system-info', async (req, res) => {
             cpu: cpuUsage,
             memory: memoryUsage,
             memoryDetails: `${activeMemory} / ${totalMemory}`,
+            memoryInMB: memory.active / (1024 * 1024), // Add this line
             uptime: formatUptime(Math.floor(uptime))
         });
     } catch (error) {

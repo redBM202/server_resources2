@@ -12,7 +12,7 @@ window.addEventListener('load', function() {
         data: {
             labels: [],
             datasets: [{
-                label: 'CPU Usage',
+                label: 'CPU Usage (%)',
                 data: [],
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
@@ -22,10 +22,7 @@ window.addEventListener('load', function() {
         options: {
             scales: {
                 x: {
-                    type: 'time',
-                    time: {
-                        unit: 'second'
-                    }
+                    display: false
                 },
                 y: {
                     beginAtZero: true,
@@ -41,7 +38,7 @@ window.addEventListener('load', function() {
         data: {
             labels: [],
             datasets: [{
-                label: 'Memory Usage',
+                label: 'Memory Usage (GB)',
                 data: [],
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
@@ -51,14 +48,17 @@ window.addEventListener('load', function() {
         options: {
             scales: {
                 x: {
-                    type: 'time',
-                    time: {
-                        unit: 'second'
-                    }
+                    display: false
                 },
                 y: {
                     beginAtZero: true,
-                    max: 100
+                    ticks: {
+                        callback: function(value) {
+                            return value >= 1024 
+                                ? (value/1024).toFixed(1) + ' GB'
+                                : value.toFixed(1) + ' MB';
+                        }
+                    }
                 }
             }
         }
@@ -80,7 +80,9 @@ window.addEventListener('load', function() {
             document.getElementById('memory-details').textContent = data.memoryDetails;
             document.getElementById('uptime').textContent = data.uptime;
 
-            updateCharts(data.cpu, data.memory);
+            const now = new Date();
+            updateChart(cpuChart, now, data.cpu);
+            updateChart(memoryChart, now, data.memoryInMB); // New memory value in MB
         } catch (error) {
             console.error('Error fetching system info:', error);
             document.getElementById('hostname').textContent = 'Error fetching system info';
@@ -94,22 +96,14 @@ window.addEventListener('load', function() {
         }
     }
 
-    function updateCharts(cpuUsage, memoryUsage) {
-        const now = new Date();
-        if (cpuChart.data.labels.length > 20) {
-            cpuChart.data.labels.shift();
-            cpuChart.data.datasets[0].data.shift();
+    function updateChart(chart, label, value) {
+        if (chart.data.labels.length > 20) {
+            chart.data.labels.shift();
+            chart.data.datasets[0].data.shift();
         }
-        if (memoryChart.data.labels.length > 20) {
-            memoryChart.data.labels.shift();
-            memoryChart.data.datasets[0].data.shift();
-        }
-        cpuChart.data.labels.push(now);
-        cpuChart.data.datasets[0].data.push(cpuUsage);
-        memoryChart.data.labels.push(now);
-        memoryChart.data.datasets[0].data.push(memoryUsage);
-        cpuChart.update();
-        memoryChart.update();
+        chart.data.labels.push(label);
+        chart.data.datasets[0].data.push(value);
+        chart.update();
     }
 
     // Start fetching data
