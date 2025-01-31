@@ -1,12 +1,32 @@
-// Wait for Chart.js to load
-window.addEventListener('load', function() {
+document.addEventListener('DOMContentLoaded', function() {
     if (typeof Chart === 'undefined') {
         console.error('Chart.js not loaded');
         return;
     }
 
+    let totalMemoryMB = 0;
+
     // Initialize charts
     const ctxCpu = document.getElementById('cpuChart').getContext('2d');
+    const ctxMemory = document.getElementById('memoryChart').getContext('2d');
+
+    const chartOptions = {
+        elements: {
+            point: {
+                radius: 0
+            },
+            line: {
+                tension: 0.4
+            }
+        },
+        scales: {
+            x: {
+                display: false
+            }
+        },
+        animation: false
+    };
+
     const cpuChart = new Chart(ctxCpu, {
         type: 'line',
         data: {
@@ -15,15 +35,15 @@ window.addEventListener('load', function() {
                 label: 'CPU Usage (%)',
                 data: [],
                 borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                fill: false
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2,
+                fill: true
             }]
         },
         options: {
+            ...chartOptions,
             scales: {
-                x: {
-                    display: false
-                },
+                ...chartOptions.scales,
                 y: {
                     beginAtZero: true,
                     max: 100
@@ -32,26 +52,26 @@ window.addEventListener('load', function() {
         }
     });
 
-    const ctxMemory = document.getElementById('memoryChart').getContext('2d');
     const memoryChart = new Chart(ctxMemory, {
         type: 'line',
         data: {
             labels: [],
             datasets: [{
-                label: 'Memory Usage (GB)',
+                label: 'Memory Usage',
                 data: [],
                 borderColor: 'rgba(153, 102, 255, 1)',
-                borderWidth: 1,
-                fill: false
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderWidth: 2,
+                fill: true
             }]
         },
         options: {
+            ...chartOptions,
             scales: {
-                x: {
-                    display: false
-                },
+                ...chartOptions.scales,
                 y: {
                     beginAtZero: true,
+                    max: totalMemoryMB,
                     ticks: {
                         callback: function(value) {
                             return value >= 1024 
@@ -72,40 +92,50 @@ window.addEventListener('load', function() {
             }
             const data = await response.json();
 
-            document.getElementById('hostname').textContent = data.hostname;
-            document.getElementById('osinfo').textContent = data.osinfo;
-            document.getElementById('kernel').textContent = data.kernel;
-            document.getElementById('cpu').textContent = data.cpu + '%';
-            document.getElementById('memory').textContent = data.memory + '%';
-            document.getElementById('memory-details').textContent = data.memoryDetails;
-            document.getElementById('uptime').textContent = data.uptime;
+            // Update total memory and chart scale on first load
+            if (totalMemoryMB === 0) {
+                totalMemoryMB = data.totalMemoryMB;
+                memoryChart.options.scales.y.max = totalMemoryMB;
+                memoryChart.update('none');
+            }
 
+            // Update DOM elements
+            const elements = {
+                'hostname': data.hostname,
+                'osinfo': data.osinfo,
+                'cpu': data.cpu + '%',
+                'memory': data.memory + '%',
+                'memory-details': data.memoryDetails,
+                'uptime': data.uptime
+            };
+
+            for (const [id, value] of Object.entries(elements)) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = value;
+                }
+            }
+
+            // Update charts
             const now = new Date();
             updateChart(cpuChart, now, data.cpu);
-            updateChart(memoryChart, now, data.memoryInMB); // New memory value in MB
+            updateChart(memoryChart, now, data.memoryInMB);
         } catch (error) {
             console.error('Error fetching system info:', error);
-            document.getElementById('hostname').textContent = 'Error fetching system info';
-            document.getElementById('osinfo').textContent = error.message;
-            document.getElementById('kernel').textContent = 'N/A';
-            document.getElementById('cpu').textContent = 'N/A';
-            document.getElementById('memory').textContent = 'N/A';
-            document.getElementById('memory-details').textContent = 'N/A';
-            document.getElementById('uptime').textContent = 'N/A';
         }
     }
 
     function updateChart(chart, label, value) {
-        if (chart.data.labels.length > 20) {
+        if (chart.data.labels.length > 120) { // Increase to 120 data points
             chart.data.labels.shift();
             chart.data.datasets[0].data.shift();
         }
         chart.data.labels.push(label);
         chart.data.datasets[0].data.push(value);
-        chart.update();
+        chart.update('none'); // Disable animations on update
     }
 
     // Start fetching data
     fetchSystemInfo();
-    setInterval(fetchSystemInfo, 10000);
+    setInterval(fetchSystemInfo, 1000);
 });

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linux Task Manager</title>
+    <title>Task Manager</title>
     <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
     <button class="toggle-btn" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-    <h1>Linux System Monitor</h1>
+    <h1>Task Manager</h1>
     
     <div class="info-container">
         <div class="info-box">
@@ -20,45 +20,46 @@
             <div id="osinfo">Loading...</div>
         </div>
         <div class="info-box">
-            <div class="info-label">Kernel Version</div>
-            <div id="kernel">Loading...</div>
-        </div>
-        <div class="info-box">
-            <div class="info-label">CPU Usage</div>
-            <div id="cpu">Loading...</div>
-        </div>
-        <div class="info-box">
-            <div class="info-label">Memory Usage</div>
-            <div id="memory">Loading...</div>
-            <div id="memory-details" class="details">Loading...</div>
-        </div>
-        <div class="info-box">
             <div class="info-label">Uptime</div>
             <div id="uptime">Loading...</div>
         </div>
     </div>
 
-    <div class="chart-container">
-        <canvas id="cpuChart"></canvas>
+    <div class="monitor-section">
+        <div class="chart-container">
+            <canvas id="cpuChart"></canvas>
+            <div class="chart-info">
+                <div class="info-label">CPU Usage</div>
+                <div id="cpu">Loading...</div>
+            </div>
+        </div>
     </div>
-    <div class="chart-container">
-        <canvas id="memoryChart"></canvas>
+
+    <div class="monitor-section">
+        <div class="chart-container">
+            <canvas id="memoryChart"></canvas>
+            <div class="chart-info">
+                <div class="info-label">Memory Usage</div>
+                <div id="memory">Loading...</div>
+                <div id="memory-details" class="details">Loading...</div>
+            </div>
+        </div>
     </div>
 
     <script src="scripts/lib/chart.min.js"></script>
     <script src="scripts/lib/chartjs-adapter-date-fns.bundle.min.js"></script>
-    <script src="scripts/scripts.js"></script>
     <script>
-        // Check for saved dark mode preference
+        // Dark mode functions
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
+        }
+
+        // Apply dark mode on load if needed
         if (localStorage.getItem('dark-mode') === 'true') {
             document.body.classList.add('dark-mode');
         }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            // Save preference to localStorage
-            localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
-        }
     </script>
+    <script src="scripts/scripts.js"></script>
 </body>
 </html>

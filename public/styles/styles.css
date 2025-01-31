@@ -45,7 +45,7 @@ h1 {
     position: relative;
     height: 40vh;
     width: 80vw;
-    margin-top: 20px;
+    margin: 0 auto;
 }
 
 .details {
@@ -56,4 +56,13 @@ h1 {
 
 .dark-mode .details {
     color: #aaa;
+}
+
+.monitor-section {
+    margin: 20px 0;
+}
+
+.chart-info {
+    text-align: center;
+    margin-top: 10px;
 }

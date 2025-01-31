@@ -40,7 +40,6 @@ app.get('/api/system-info', async (req, res) => {
     try {
         const hostname = os.hostname();
         const osinfo = await si.osInfo();
-        const kernel = osinfo.kernel;
         const uptime = os.uptime();
 
         const cpuLoad = await si.currentLoad();
@@ -62,18 +61,20 @@ app.get('/api/system-info', async (req, res) => {
 
         res.json({
             hostname,
-            osinfo: `${osinfo.distro} ${osinfo.release}`,
-            kernel,
+            osinfo: osinfo ? `${osinfo.distro} ${osinfo.release}` : 'OS Info not available',
             cpu: cpuUsage,
             memory: memoryUsage,
-            memoryDetails: `${activeMemory} / ${totalMemory}`,
-            memoryInMB: memory.active / (1024 * 1024), // Add this line
+            memoryDetails: `${totalMemory} / ${activeMemory}`,
+            memoryInMB: memory.active / (1024 * 1024),
+            totalMemoryMB: memory.total / (1024 * 1024),
             uptime: formatUptime(Math.floor(uptime))
         });
     } catch (error) {
         console.error('Error fetching system info:', error);
-        console.error('Error details:', error.message, error.stack);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({
+            error: 'Internal Server Error',
+            message: error.message
+        });
     }
 });
 
