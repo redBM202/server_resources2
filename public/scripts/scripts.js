@@ -44,6 +44,11 @@ function updateCharts(cpuUsage, memoryUsage) {
     memoryChart.update();
 }
 
+// Ensure Chart.js is loaded
+if (typeof Chart === 'undefined') {
+    throw new Error('Chart.js is not loaded');
+}
+
 // Initialize charts
 const ctxCpu = document.getElementById('cpuChart').getContext('2d');
 const cpuChart = new Chart(ctxCpu, {
