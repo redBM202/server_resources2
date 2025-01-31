@@ -17,8 +17,8 @@ app.get('/', (req, res) => {
 app.get('/api/system-info', async (req, res) => {
     try {
         const hostname = os.hostname();
-        const osinfo = `${os.type()} ${os.release()}`;
-        const kernel = os.version();
+        const osinfo = await si.osInfo();
+        const kernel = osinfo.kernel;
         const uptime = os.uptime();
 
         const cpuLoad = await si.currentLoad();
@@ -29,7 +29,7 @@ app.get('/api/system-info', async (req, res) => {
 
         res.json({
             hostname,
-            osinfo,
+            osinfo: `${osinfo.distro} ${osinfo.release}`,
             kernel,
             cpu: cpuUsage,
             memory: memoryUsage,
