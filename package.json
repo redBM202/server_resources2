@@ -9,6 +9,8 @@
   "dependencies": {
     "express": "^4.17.1",
     "systeminformation": "^5.9.9",
-    "chart.js": "^3.7.1"
+    "chart.js": "^3.7.1",
+    "chartjs-adapter-date-fns": "^2.0.0",
+    "date-fns": "^2.28.0"
   }
 }

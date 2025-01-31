@@ -7,15 +7,26 @@ const fs = require('fs');
 const app = express();
 const port = 3000;
 
-// Copy Chart.js to public directory on server start
-const chartJsSource = path.join(__dirname, 'node_modules/chart.js/dist/chart.min.js');
-const chartJsDestDir = path.join(__dirname, 'public/scripts/lib');
-const chartJsDest = path.join(chartJsDestDir, 'chart.min.js');
+// Copy Chart.js files to public directory on server start
+const files = [
+    {
+        src: path.join(__dirname, 'node_modules/chart.js/dist/chart.min.js'),
+        dest: 'chart.min.js'
+    },
+    {
+        src: path.join(__dirname, 'node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js'),
+        dest: 'chartjs-adapter-date-fns.bundle.min.js'
+    }
+];
 
-if (!fs.existsSync(chartJsDestDir)) {
-    fs.mkdirSync(chartJsDestDir, { recursive: true });
+const libDir = path.join(__dirname, 'public/scripts/lib');
+if (!fs.existsSync(libDir)) {
+    fs.mkdirSync(libDir, { recursive: true });
 }
-fs.copyFileSync(chartJsSource, chartJsDest);
+
+files.forEach(file => {
+    fs.copyFileSync(file.src, path.join(libDir, file.dest));
+});
 
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
