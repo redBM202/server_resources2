@@ -48,6 +48,17 @@ app.get('/api/system-info', async (req, res) => {
 
         const cpuUsage = cpuLoad.currentLoad.toFixed(2);
         const memoryUsage = ((memory.active / memory.total) * 100).toFixed(2);
+        
+        // Format memory values
+        const formatMemory = (bytes) => {
+            const mb = bytes / (1024 * 1024);
+            return mb >= 1024 
+                ? (mb / 1024).toFixed(2) + ' GB'
+                : mb.toFixed(2) + ' MB';
+        };
+
+        const activeMemory = formatMemory(memory.active);
+        const totalMemory = formatMemory(memory.total);
 
         res.json({
             hostname,
@@ -55,7 +66,8 @@ app.get('/api/system-info', async (req, res) => {
             kernel,
             cpu: cpuUsage,
             memory: memoryUsage,
-            uptime: formatUptime(uptime)
+            memoryDetails: `${activeMemory} / ${totalMemory}`,
+            uptime: formatUptime(Math.floor(uptime))
         });
     } catch (error) {
         console.error('Error fetching system info:', error);

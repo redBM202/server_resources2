@@ -58,3 +58,13 @@ h1 {
     padding: 10px;
     box-sizing: border-box;
 }
+
+.details {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.dark-mode .details {
+    color: #aaa;
+}
