@@ -92,7 +92,6 @@ window.addEventListener('load', function() {
             document.getElementById('memory').textContent = 'N/A';
             document.getElementById('memory-details').textContent = 'N/A';
             document.getElementById('uptime').textContent = 'N/A';
-            document.getElementById('error-message').value = `Error: ${error.message}`;
         }
     }
 
