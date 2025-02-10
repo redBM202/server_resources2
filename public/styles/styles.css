@@ -15,6 +15,7 @@ body.dark-mode {
     cursor: pointer;
     background-color: #4CAF50;
     color: white;
+    margin-left: auto;
 }
 .dark-mode .toggle-btn {
     background-color: #45a049;
@@ -36,7 +37,7 @@ h1 {
     transition: max-height 0.3s ease-out;
 }
 .info-container.expanded {
-    max-height: 500px;
+    max-height: 1000px;
     transition: max-height 0.3s ease-in;
 }
 .info-box {
@@ -52,10 +53,15 @@ h1 {
     font-weight: bold;
     margin-bottom: 5px;
 }
+.graphs-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
 .chart-container {
     position: relative;
     height: 40vh;
-    width: 80vw;
+    width: 40vw;
     margin: 0 auto;
 }
 
@@ -83,25 +89,6 @@ h1 {
     width: 80vw;
 }
 
-.storage-header {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-    margin-bottom: 10px;
-}
-
-.storage-header h2 {
-    margin: 0;
-    flex-grow: 1;
-}
-
-.collapse-icon {
-    font-size: 1.2em;
-    margin-left: 10px;
-    transition: transform 0.3s ease;
-}
-
 .disk-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -113,7 +100,7 @@ h1 {
 }
 
 .disk-grid.expanded {
-    max-height: 1000px; /* Adjust this value based on your needs */
+    max-height: 1000px;
     transition: max-height 0.3s ease-in;
 }
 
@@ -159,15 +146,71 @@ h1 {
     color: #aaa;
 }
 
-.section-header {
+.nav-menu {
     display: flex;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-    margin-bottom: 10px;
+    gap: 10px;
+    padding: 10px 20px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-.section-header h2 {
-    margin: 0;
-    flex-grow: 1;
+.dark-mode .nav-menu {
+    background: #2d2d2d;
+    border-bottom: 1px solid #444;
+}
+
+.nav-item {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: transparent;
+    color: inherit;
+    font-size: 1em;
+}
+
+.nav-item:hover {
+    background: rgba(0,0,0,0.1);
+}
+
+.dark-mode .nav-item:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.nav-item.active {
+    background: #4CAF50;
+    color: white;
+}
+
+.dark-mode .nav-item.active {
+    background: #45a049;
+}
+
+.view {
+    display: none;
+    padding: 20px;
+}
+
+.view.active {
+    display: block;
+}
+
+.section-header, .storage-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.collapse-icon {
+    transition: transform 0.3s ease;
+}
+
+.section-header .collapse-icon.expanded,
+.storage-header .collapse-icon.expanded {
+    transform: rotate(90deg);
 }

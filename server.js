@@ -36,7 +36,19 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Add cache variables
+let cachedSystemInfo = null;
+let lastCacheTime = 0;
+const cacheTimeout = 1000; // 1 second cache
+
 app.get('/api/system-info', async (req, res) => {
+    const now = Date.now();
+    
+    // Return cached data if available and fresh
+    if (cachedSystemInfo && (now - lastCacheTime < cacheTimeout)) {
+        return res.json(cachedSystemInfo);
+    }
+
     try {
         const hostname = os.hostname();
         const osinfo = await si.osInfo();
@@ -69,7 +81,8 @@ app.get('/api/system-info', async (req, res) => {
             usePercent: disk.use.toFixed(1)
         }));
 
-        res.json({
+        // Cache the response
+        cachedSystemInfo = {
             hostname,
             osinfo: osinfo ? `${osinfo.distro} ${osinfo.release}` : 'OS Info not available',
             cpu: cpuUsage,
@@ -79,7 +92,10 @@ app.get('/api/system-info', async (req, res) => {
             totalMemoryMB: memory.total / (1024 * 1024),
             uptime: formatUptime(Math.floor(uptime)),
             disks: diskInfo
-        });
+        };
+        lastCacheTime = now;
+        
+        res.json(cachedSystemInfo);
     } catch (error) {
         console.error('Error fetching system info:', error);
         res.status(500).json({

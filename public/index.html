@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="monitor-section">
+    <div class="monitor-section graphs-container">
         <div class="chart-container">
             <canvas id="cpuChart"></canvas>
             <div class="chart-info">
@@ -41,9 +41,7 @@
                 <div id="cpu">Loading...</div>
             </div>
         </div>
-    </div>
 
-    <div class="monitor-section">
         <div class="chart-container">
             <canvas id="memoryChart"></canvas>
             <div class="chart-info">
@@ -84,15 +82,24 @@
             const diskInfo = document.getElementById('disk-info');
             const collapseIcon = document.querySelector('.storage-header .collapse-icon');
             diskInfo.classList.toggle('expanded');
-            collapseIcon.textContent = diskInfo.classList.contains('expanded') ? '▼' : '▶';
+            collapseIcon.classList.toggle('expanded');
         }
 
         function toggleSystemInfo() {
             const sysInfo = document.querySelector('.info-container');
             const collapseIcon = document.querySelector('.section-header .collapse-icon');
             sysInfo.classList.toggle('expanded');
-            collapseIcon.textContent = sysInfo.classList.contains('expanded') ? '▼' : '▶';
+            collapseIcon.classList.toggle('expanded');
         }
+
+        // Initialize sections as expanded on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.info-container').classList.add('expanded');
+            document.querySelector('.disk-grid').classList.add('expanded');
+            document.querySelectorAll('.collapse-icon').forEach(icon => {
+                icon.classList.add('expanded');
+            });
+        });
     </script>
     <script src="scripts/scripts.js"></script>
 </body>
