@@ -5,6 +5,7 @@ class SystemMonitor {
         this.charts = charts;
         this.updateInterval = 2000;
         this.lastUpdate = 0;
+        this.totalMemorySet = false;
     }
 
     async fetchData() {
@@ -20,6 +21,12 @@ class SystemMonitor {
 
     updateUI(data) {
         if (!data) return;
+
+        // Set total memory on first load
+        if (!this.totalMemorySet && data.totalMemoryMB) {
+            this.charts.setTotalMemory(data.totalMemoryMB);
+            this.totalMemorySet = true;
+        }
 
         const elements = {
             'hostname': data.hostname,
