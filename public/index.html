@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
-    <button class="toggle-btn" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <button class="toggle-btn">Toggle Dark Mode</button>
     <h1>Task Manager</h1>
     
     <div class="monitor-section">
         <div class="info-container-wrapper">
-            <div class="section-header" onclick="toggleSystemInfo()">
+            <div class="section-header">
                 <h2>System Information</h2>
                 <span class="collapse-icon">▶</span>
             </div>
@@ -54,7 +54,7 @@
 
     <div class="monitor-section">
         <div class="storage-container">
-            <div class="storage-header" onclick="toggleStorage()">
+            <div class="storage-header">
                 <h2>Storage</h2>
                 <span class="collapse-icon">▶</span>
             </div>
@@ -66,41 +66,6 @@
 
     <script src="scripts/lib/chart.min.js"></script>
     <script src="scripts/lib/chartjs-adapter-date-fns.bundle.min.js"></script>
-    <script>
-        // Dark mode functions
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
-        }
-
-        // Apply dark mode on load if needed
-        if (localStorage.getItem('dark-mode') === 'true') {
-            document.body.classList.add('dark-mode');
-        }
-
-        function toggleStorage() {
-            const diskInfo = document.getElementById('disk-info');
-            const collapseIcon = document.querySelector('.storage-header .collapse-icon');
-            diskInfo.classList.toggle('expanded');
-            collapseIcon.classList.toggle('expanded');
-        }
-
-        function toggleSystemInfo() {
-            const sysInfo = document.querySelector('.info-container');
-            const collapseIcon = document.querySelector('.section-header .collapse-icon');
-            sysInfo.classList.toggle('expanded');
-            collapseIcon.classList.toggle('expanded');
-        }
-
-        // Initialize sections as expanded on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('.info-container').classList.add('expanded');
-            document.querySelector('.disk-grid').classList.add('expanded');
-            document.querySelectorAll('.collapse-icon').forEach(icon => {
-                icon.classList.add('expanded');
-            });
-        });
-    </script>
-    <script src="scripts/scripts.js"></script>
+    <script type="module" src="scripts/main.js"></script>
 </body>
 </html>

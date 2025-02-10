@@ -44,64 +44,49 @@ const cacheTimeout = 1000; // 1 second cache
 app.get('/api/system-info', async (req, res) => {
     const now = Date.now();
     
-    // Return cached data if available and fresh
     if (cachedSystemInfo && (now - lastCacheTime < cacheTimeout)) {
         return res.json(cachedSystemInfo);
     }
 
     try {
-        const hostname = os.hostname();
-        const osinfo = await si.osInfo();
-        const uptime = os.uptime();
-
-        const cpuLoad = await si.currentLoad();
-        const memory = await si.mem();
+        const [osinfo, cpuLoad, memory, fsSize] = await Promise.all([
+            si.osInfo(),
+            si.currentLoad(),
+            si.mem(),
+            si.fsSize()
+        ]);
 
         const cpuUsage = cpuLoad.currentLoad.toFixed(2);
         const memoryUsage = ((memory.active / memory.total) * 100).toFixed(2);
         
-        // Format memory values
         const formatMemory = (bytes) => {
-            const mb = bytes / (1024 * 1024);
-            return mb >= 1024 
-                ? (mb / 1024).toFixed(2) + ' GB'
-                : mb.toFixed(2) + ' MB';
+            const gb = bytes / (1024 * 1024 * 1024);
+            return gb.toFixed(2) + ' GB';
         };
 
-        const activeMemory = formatMemory(memory.active);
-        const totalMemory = formatMemory(memory.total);
-
-        // Add disk information
-        const fsSize = await si.fsSize();
-        const diskInfo = fsSize.map(disk => ({
-            fs: disk.fs,
-            size: formatBytes(disk.size),
-            used: formatBytes(disk.used),
-            available: formatBytes(disk.available),
-            usePercent: disk.use.toFixed(1)
-        }));
-
-        // Cache the response
         cachedSystemInfo = {
-            hostname,
+            hostname: os.hostname(),
             osinfo: osinfo ? `${osinfo.distro} ${osinfo.release}` : 'OS Info not available',
             cpu: cpuUsage,
             memory: memoryUsage,
-            memoryDetails: `${totalMemory} / ${activeMemory}`,
+            memoryDetails: `${formatMemory(memory.active)} / ${formatMemory(memory.total)}`,
             memoryInMB: memory.active / (1024 * 1024),
             totalMemoryMB: memory.total / (1024 * 1024),
-            uptime: formatUptime(Math.floor(uptime)),
-            disks: diskInfo
+            uptime: formatUptime(Math.floor(os.uptime())),
+            disks: fsSize.map(disk => ({
+                fs: disk.fs,
+                size: formatBytes(disk.size),
+                used: formatBytes(disk.used),
+                available: formatBytes(disk.available),
+                usePercent: disk.use.toFixed(1)
+            }))
         };
+
         lastCacheTime = now;
-        
         res.json(cachedSystemInfo);
     } catch (error) {
         console.error('Error fetching system info:', error);
-        res.status(500).json({
-            error: 'Internal Server Error',
-            message: error.message
-        });
+        res.status(500).json({ error: 'Internal Server Error', message: error.message });
     }
 });
 
